@@ -1,6 +1,6 @@
 {
   "name": "imdb2justwatch",
-  "version": "0.2",
+  "version": "0.3",
   "main": "background.js",
   "repository": "https://github.com/psidex/imdb2justwatch",
   "author": "psidex",
