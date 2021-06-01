@@ -6,11 +6,11 @@ browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
 browser.pageAction.onClicked.addListener(async (tab) => {
     let [movieTitle] = await browser.tabs.executeScript(tab.id, {
-        code: 'document.querySelector(\'.title_wrapper\').querySelector(\'h1\').textContent.trim()',
+        code: 'document.querySelector(\'[class^=TitleHeader__TitleText]\').textContent.trim()',
     });
 
-    // NOTE: IMDb uses non-breaking spaces to separate the title and date, so replace all whitespace
-    // with normal spaces.
+    // NOTE: IMDb has used non-breaking spaces in titles in the past, this is out-dated code but
+    // might as well leave it. Replaces all whitespace chars with ' '.
     movieTitle = movieTitle.replace(/\s/g, ' ');
 
     const url = `https://apis.justwatch.com/content/titles/en_GB/popular?language=en&body={"page_size":1,"page":1,"query":"${movieTitle}","content_types":["show","movie"]}`;
