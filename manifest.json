@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "imdb2justwatch",
-  "version": "0.5",
+  "version": "0.6",
   "description": "A Firefox add-on that provides an address bar button on IMDb pages that takes you to the relevant Just Watch page.",
   "icons": {
     "48": "icons/icon_48.png"
@@ -13,10 +13,16 @@
   "permissions": [
     "tabs",
     "activeTab",
+    "storage",
     "*://*.justwatch.com/*"
   ],
   "background": {
-    "scripts": ["background.js"]
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "options_ui": {
+    "page": "options.html"
   },
   "browser_specific_settings": {
     "gecko": {

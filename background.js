@@ -14,7 +14,12 @@ browser.pageAction.onClicked.addListener(async (tab) => {
     // might as well leave it. Replaces all whitespace chars with ' '.
     movieTitle = movieTitle.replace(/\s/g, ' ');
 
-    const url = `https://apis.justwatch.com/content/titles/en_GB/popular?language=en&body={"page_size":1,"page":1,"query":"${movieTitle}","content_types":["show","movie"]}`;
+    let { locale } = await browser.storage.sync.get('locale');
+    if (locale === undefined || locale === null || locale === '') {
+        locale = 'en_GB';
+    }
+
+    const url = `https://apis.justwatch.com/content/titles/${locale}/popular?language=en&body={"page_size":1,"page":1,"query":"${movieTitle}","content_types":["show","movie"]}`;
     const response = await fetch(encodeURI(url));
     const data = await response.json();
 
