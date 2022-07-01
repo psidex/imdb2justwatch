@@ -5,8 +5,9 @@ browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 });
 
 browser.pageAction.onClicked.addListener(async (tab) => {
+    // NOTE: The CSS selector has changed before and probably will again
     let [movieTitle] = await browser.tabs.executeScript(tab.id, {
-        code: 'document.querySelector(\'[class^=TitleHeader__TitleText]\').textContent.trim()',
+        code: 'document.querySelector(\'h1[data-testid="hero-title-block__title"]\').textContent.trim()',
     });
 
     // NOTE: IMDb has used non-breaking spaces in titles in the past, this is out-dated code but
