@@ -1,4 +1,6 @@
-"""Use localeplanet.com to download titles for each locale"""
+"""Use localeplanet.com to download titles for each locale.
+Doesn't produce a perfect output, output requires some manual cleaning.
+"""
 
 from time import sleep
 
