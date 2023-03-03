@@ -1,3 +1,20 @@
+const getTitleScript = `
+(() => {
+    const possibleSelectors = [
+        'h1[data-testid="hero-title-block__title"]',
+        'h1[data-testid="hero__pageTitle"]',
+    ];
+    for (const selector of possibleSelectors) {
+        try {
+            return document.querySelector(selector).textContent.trim();
+        } catch {
+            // pass
+        }
+    }
+    return '';
+})();
+`;
+
 browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (tab.url.includes('imdb.com/title')) {
         browser.pageAction.show(tab.id);
@@ -7,7 +24,7 @@ browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 browser.pageAction.onClicked.addListener(async (tab) => {
     // NOTE: The CSS selector has changed before and probably will again
     let [movieTitle] = await browser.tabs.executeScript(tab.id, {
-        code: 'document.querySelector(\'h1[data-testid="hero-title-block__title"]\').textContent.trim()',
+        code: getTitleScript,
     });
 
     // NOTE: IMDb has used non-breaking spaces in titles in the past, this is out-dated code but

@@ -1,3 +1,5 @@
+/* eslint-disable quote-props */
+
 const locales = {
     'Catalan (Andorra)': 'ca_AD',
     'Arabic (United Arab Emirates)': 'ar_AE',
