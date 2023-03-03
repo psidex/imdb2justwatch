@@ -124,6 +124,7 @@ const locales = {
 
 document.addEventListener('DOMContentLoaded', async () => {
     const localeOptions = document.querySelector('#locale');
+    const openinnewtabInput = document.querySelector('#openinnewtab');
 
     for (const title of Object.keys(locales).sort()) {
         const option = document.createElement('option');
@@ -132,16 +133,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         localeOptions.appendChild(option);
     }
 
-    const onSelect = () => {
+    localeOptions.addEventListener('change', () => {
         const selected = localeOptions.options[localeOptions.selectedIndex].value;
         browser.storage.sync.set({ locale: selected });
-    };
-    localeOptions.addEventListener('change', onSelect);
+    });
 
-    let { locale } = await browser.storage.sync.get('locale');
+    openinnewtabInput.addEventListener('change', () => {
+        const { checked } = openinnewtabInput;
+        browser.storage.sync.set({ openInNewTab: checked });
+    });
+
+    let { locale, openInNewTab } = await browser.storage.sync.get(['locale', 'openInNewTab']);
+
     if (locale === undefined || locale === null || locale === '') {
         locale = 'en_GB';
         browser.storage.sync.set({ locale });
     }
+    if (openInNewTab === undefined || openInNewTab === null || openInNewTab === '') {
+        openInNewTab = false;
+        browser.storage.sync.set({ openInNewTab });
+    }
+
     localeOptions.value = locale;
+    openinnewtabInput.checked = openInNewTab;
 });

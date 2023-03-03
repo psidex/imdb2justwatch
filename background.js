@@ -22,18 +22,21 @@ browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 });
 
 browser.pageAction.onClicked.addListener(async (tab) => {
-    // NOTE: The CSS selector has changed before and probably will again
     let [movieTitle] = await browser.tabs.executeScript(tab.id, {
         code: getTitleScript,
     });
 
-    // NOTE: IMDb has used non-breaking spaces in titles in the past, this is out-dated code but
-    // might as well leave it. Replaces all whitespace chars with ' '.
+    // IMDb has used non-breaking spaces in titles in the past.
+    // Replaces all whitespace chars with ' '.
     movieTitle = movieTitle.replace(/\s/g, ' ');
 
-    let { locale } = await browser.storage.sync.get('locale');
+    let { locale, openInNewTab } = await browser.storage.sync.get(['locale', 'openInNewTab']);
+
     if (locale === undefined || locale === null || locale === '') {
         locale = 'en_GB';
+    }
+    if (openInNewTab === undefined || openInNewTab === null || openInNewTab === '') {
+        openInNewTab = false;
     }
 
     const url = `https://apis.justwatch.com/content/titles/${locale}/popular?language=en&body={"page_size":1,"page":1,"query":"${movieTitle}","content_types":["show","movie"]}`;
@@ -41,7 +44,11 @@ browser.pageAction.onClicked.addListener(async (tab) => {
     const data = await response.json();
 
     const loc = data.items[0].full_path;
-    await browser.tabs.update(tab.id, {
-        url: `https://www.justwatch.com${loc}`,
-    });
+    const opts = { url: `https://www.justwatch.com${loc}` };
+
+    if (openInNewTab === true) {
+        await browser.tabs.create(opts);
+    } else {
+        await browser.tabs.update(tab.id, opts);
+    }
 });
